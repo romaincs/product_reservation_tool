@@ -1,4 +1,5 @@
 using ProductReservationTool.API;
+using ProductReservationTool.Exceptions;
 using ProductReservationTool.Model;
 using ProductReservationTool.Service;
 using System.Net.Http.Headers;
@@ -56,6 +57,30 @@ namespace ProductReservationTool.Tests
                 if(reservations.Count != count + ITEMS_NB)
                     Assert.Fail("Must return " + count + ITEMS_NB + " values, not " + reservations.Count);
 
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void TestCreate_SameProduct()
+        {
+            var order1 = new OrderLine() { ProductId = 1, Quantity = 10 };
+            var order2 = new OrderLine() { ProductId = 1, Quantity = 6 };
+            var order3 = new OrderLine() { ProductId = 2, Quantity = 7 };
+            var orders = new List<OrderLine>() { order1, order2, order3 };
+
+            try
+            {
+                var inventoryEndPoint = new InventoryEndPoint();
+                inventoryEndPoint.CreateReservation(orders);
+                Assert.Fail($"reservation created without error. Should generate one.");
+            }
+            catch (DuplicateProductInReservationException) 
+            {
+                // Success
             }
             catch (Exception ex)
             {
