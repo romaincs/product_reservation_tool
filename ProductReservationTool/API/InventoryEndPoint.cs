@@ -50,6 +50,12 @@ namespace ProductReservationTool.API
             return prodService.Get(cursor, limit).ToList();
         }
 
+        public List<Product> GetAllProducts()
+        {
+            var prodService = new ProductService(repository);
+            return prodService.GetAll().ToList();
+        }
+
         public Product? GetProductByID(int id)
         {
             var prodService = new ProductService(repository);

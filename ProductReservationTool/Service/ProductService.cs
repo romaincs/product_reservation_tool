@@ -29,6 +29,11 @@ namespace ProductReservationTool.Service
             return repository.GetProducts().Skip(cursor).Take(limit);
         }
 
+        public IQueryable<Product> GetAll()
+        {
+            return repository.GetProducts();
+        }
+
         public Product? GetByID(int id)
         {
             return repository.GetProduct(id);
@@ -37,7 +42,7 @@ namespace ProductReservationTool.Service
         public int GetNewProductID()
         {
             Product? lastProd = repository.GetProduct();
-            return (lastProd != null) ? lastProd.ProductId++ : 1;
+            return (lastProd != null) ? lastProd.ProductId+1 : 1;
         }
 
         public void SetProduct(int productId, int quantity)

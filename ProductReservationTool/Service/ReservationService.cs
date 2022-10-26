@@ -33,7 +33,7 @@ namespace ProductReservationTool.Service
         public int GetNewReservationID()
         {
             Reservation? lastResa = repository.GetReservation();
-            return (lastResa != null) ? lastResa.ReservationId++ : 1;
+            return (lastResa != null) ? lastResa.ReservationId + 1 : 1;
         }
 
         public IQueryable<Reservation> Get(int cursor, int limit)

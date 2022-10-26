@@ -36,7 +36,7 @@ namespace ProductReservationTool.Tests
             var order2 = new OrderLine() { ProductId = 5, Quantity = 2 };
             var order3 = new OrderLine() { ProductId = 6, Quantity = 8 };
             var order4 = new OrderLine() { ProductId = 7, Quantity = 12 };
-            var orders = new List<OrderLine>() { order1, order2, order3 };
+            var orders = new List<OrderLine>() { order1, order2, order3, order4 };
 
             try
             {
@@ -92,6 +92,30 @@ namespace ProductReservationTool.Tests
                 var reservations = inventoryEndPoint.GetReservations(0, 3);
                 if (reservations.Count != 3)
                     Assert.Fail("Must return 3 values, not " + reservations.Count);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void TestGet_Unique()
+        {
+            TestCreate_Bulk();
+
+            try
+            {
+                var inventoryEndPoint = new InventoryEndPoint();
+                var reservations = inventoryEndPoint.GetAllReservations();
+
+                var duplicates = reservations.GroupBy(r => r.ReservationId)
+                      .Where(r => r.Count() > 1)
+                      .Select(r => r.Key)
+                      .ToList();
+
+                if (duplicates.Count > 0)
+                    Assert.Fail($"Found {duplicates.Count} duplicates, should be zero");
             }
             catch (Exception ex)
             {
