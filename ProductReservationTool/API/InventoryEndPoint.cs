@@ -18,15 +18,11 @@ namespace ProductReservationTool.API
             repository = new InventoryMemoryRepository();
         }
 
+        #region RESERVATIONS --------------------------------------------------------------------------------
         public Reservation CreateReservation(List<OrderLine> order)
         {
             var resService = new ReservationService(repository);
             return resService.Create(order);
-        }
-
-        public List<Product> GetProducts(int cursor, int limit)
-        {
-            throw new NotImplementedException();
         }
 
         public List<Reservation> GetReservations(int cursor, int limit)
@@ -40,10 +36,31 @@ namespace ProductReservationTool.API
             var resService = new ReservationService(repository);
             return resService.GetAll().ToList();
         }
+        #endregion
 
-        public void SetProduct(string productId, int quantity)
+        #region PRODUCTS ------------------------------------------------------------------------------------
+        public Product CreateProduct(Product product)
         {
-            throw new NotImplementedException();
+            var prodService = new ProductService(repository);
+            return prodService.Create(product);
         }
+        public List<Product> GetProducts(int cursor, int limit)
+        {
+            var prodService = new ProductService(repository);
+            return prodService.Get(cursor, limit).ToList();
+        }
+
+        public Product? GetProductByID(int id)
+        {
+            var prodService = new ProductService(repository);
+            return prodService.GetByID(id);
+        }
+
+        public void SetProduct(int productId, int quantity)
+        {
+            var prodService = new ProductService(repository);
+            prodService.SetProduct(productId, quantity);
+        } 
+        #endregion
     }
 }

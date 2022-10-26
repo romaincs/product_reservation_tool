@@ -10,10 +10,15 @@ namespace ProductReservationTool.Repository
     public interface IInventoryRepository
     {
         IQueryable<Product> GetProducts();
+        void InsertProduct(Product product);
+        Product? GetProduct();
+        public Product? GetProduct(int id);
+        public void UpdateProduct(Product product);
         IQueryable<Reservation> GetReservations();
         void InsertReservation(Reservation reservation);
         Reservation? GetReservation();
         Reservation? GetReservation(int id);
+        void InsertOrderLine(OrderLine order);
 
     }
 }
