@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ProductReservationTool.Exceptions
 {
-    public class DuplicateProductInReservationException : Exception
+    public class DuplicateProductException : Exception
     {
-        public DuplicateProductInReservationException()
+        public DuplicateProductException()
             : base($"duplicate product for a reservation")
         {
 

@@ -108,7 +108,7 @@ namespace ProductReservationTool.Tests
                 inventoryEndPoint.CreateReservation(orders);
                 Assert.Fail($"reservation created without error. Should generate one.");
             }
-            catch (DuplicateProductInReservationException) 
+            catch (DuplicateProductException) 
             {
                 // Success
             }

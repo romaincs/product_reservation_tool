@@ -42,7 +42,7 @@ namespace ProductReservationTool.Service
                       .ToList();
 
             if (duplicates.Count > 0)
-                throw new DuplicateProductInReservationException();
+                throw new DuplicateProductException();
         }
 
         private void CheckProductsExits(List<OrderLine> orders)
