@@ -119,6 +119,27 @@ namespace ProductReservationTool.Tests
         }
 
         [TestMethod]
+        public void TestCreate_OutofStockProduct()
+        {
+            var order1 = new OrderLine() { ProductId = 3, Quantity = 10 };
+            var orders = new List<OrderLine>() { order1 };
+
+            try
+            {
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
+                var reservation = inventoryEndPoint.CreateReservation(orders);
+                if (reservation == null)
+                    Assert.Fail("Reservation is null");
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
         public void TestGet_Single()
         {
             try
