@@ -69,7 +69,7 @@ namespace ProductReservationTool.Repository
         #region RESERVATIONS --------------------------------------------------------------------------------
         public IQueryable<Reservation> GetReservations()
         {
-            return reservations.AsQueryable();
+            return reservations.OrderBy(r => r.CreatedAt).AsQueryable();
         }
 
         public void InsertReservation(Reservation reservation)
@@ -79,9 +79,6 @@ namespace ProductReservationTool.Repository
 
         public Reservation? GetReservation()
         {
-            if (reservations.Count == 0)
-                return null;
-
             return reservations.OrderByDescending(r => r.ReservationId).FirstOrDefault();
         }
 

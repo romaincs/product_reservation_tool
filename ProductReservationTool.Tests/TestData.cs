@@ -95,7 +95,7 @@ namespace ProductReservationTool.Tests
             new Reservation()
             {
                 ReservationId = 2,
-                CreatedAt = DateTime.Now.AddMinutes(-10),
+                CreatedAt = DateTime.Now.AddMinutes(-20),
                 IsAvailable = true,
                 OrderLines = new List<OrderLine>()
                 {
@@ -109,7 +109,7 @@ namespace ProductReservationTool.Tests
             new Reservation()
             {
                 ReservationId = 3,
-                CreatedAt = DateTime.Now.AddMinutes(-5),
+                CreatedAt = DateTime.Now.AddMinutes(-1),
                 IsAvailable = true,
                 OrderLines = new List<OrderLine>()
                 {
@@ -133,7 +133,7 @@ namespace ProductReservationTool.Tests
             new Reservation()
             {
                 ReservationId = 4,
-                CreatedAt = DateTime.Now.AddMinutes(-1),
+                CreatedAt = DateTime.Now,
                 IsAvailable = false,
                 OrderLines = new List<OrderLine>()
                 {

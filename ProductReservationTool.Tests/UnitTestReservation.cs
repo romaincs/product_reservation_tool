@@ -258,5 +258,26 @@ namespace ProductReservationTool.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        [TestMethod]
+        public void TestGet_IsFIFO()
+        {
+            try
+            {
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
+                var reservations = inventoryEndPoint.GetReservations(0, 3);
+                if (reservations.Count != 3)
+                    Assert.Fail("Must return 3 values, not " + reservations.Count);
+                if (reservations[0].CreatedAt > reservations[1].CreatedAt || reservations[1].CreatedAt > reservations[2].CreatedAt)
+                    Assert.Fail("reservations return are not sorted by date. Should be.");
+                    
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }
