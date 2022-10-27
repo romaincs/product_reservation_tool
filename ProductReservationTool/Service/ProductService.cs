@@ -35,31 +35,45 @@ namespace ProductReservationTool.Service
             return repository.GetProducts();
         }
 
-        public Product? GetByID(int id)
+        public Product? GetByID(string id)
         {
             return repository.GetProduct(id);
         }
 
-        public int GetNewProductID()
+        public string GetNewProductID()
         {
             Product? lastProd = repository.GetProduct();
-            return (lastProd != null) ? lastProd.ProductId+1 : 1;
+            var newID = (lastProd != null) ? int.Parse(lastProd.ProductId)+1 : 1;
+            return newID.ToString();
         }
 
-        public void SetProduct(int productId, int quantity)
+        public void SetProduct(string productId, int quantity)
         {
             var product = GetByID(productId);
             if(product == null)
                 throw new UnknownProductException(productId);
 
             product.Quantity = quantity;
-            if(quantity == 0)
+            var resaService = new ReservationService(repository);
+            var reservations = resaService.GetReservationsForProduct(product.ProductId);
+
+            if (quantity == 0)
             {
-                var resaService = new ReservationService(repository);
-                var reservations = resaService.GetReservationsForProduct(product.ProductId);
                 foreach (var reservation in reservations)
                 {
                     resaService.UpdateAvailibility(reservation, false);
+                }
+            }
+            else
+            {
+                foreach (var reservation in reservations)
+                {
+                    var orderProduct = reservation.OrderLines.Where(o => o.ProductId == productId).First(); 
+                    if(orderProduct.Quantity < quantity)
+                    {
+                        quantity = quantity - orderProduct.Quantity;
+                        resaService.UpdateAvailibility(reservation, true);
+                    }
                 }
             }
 

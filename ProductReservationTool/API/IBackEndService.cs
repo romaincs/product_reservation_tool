@@ -11,7 +11,7 @@ namespace ProductReservationTool.API
     {
         Reservation CreateReservation(List<OrderLine> order);
         List<Reservation> GetReservations(int cursor, int limit);
-        void SetProduct(int productId, int quantity);
+        void SetProduct(string productId, int quantity);
         List<Product> GetProducts(int cursor, int limit);
     }
 }

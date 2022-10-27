@@ -14,17 +14,17 @@ namespace ProductReservationTool.Tests
         {
             new Product()
             {
-                ProductId = 1,
+                ProductId = "1",
                 Quantity = 10,
             },
             new Product()
             {
-                ProductId = 2,
+                ProductId = "2",
                 Quantity = 4,
             },
             new Product()
             {
-                ProductId = 3,
+                ProductId = "3",
                 Quantity = 0,
             }
         };
@@ -33,40 +33,40 @@ namespace ProductReservationTool.Tests
         {
             new OrderLine()
             {
-                ProductId = 1,
+                ProductId = "1",
                 Quantity = 3,
             },
             new OrderLine()
             {
-                ProductId = 2,
+                ProductId = "2",
                 Quantity = 6,
             },
 
             new OrderLine()
             {
-                ProductId = 3,
+                ProductId = "3",
                 Quantity = 12,
             },
 
             new OrderLine()
             {
-                ProductId = 1,
+                ProductId = "1",
                 Quantity = 2,
             },
             new OrderLine()
             {
-                ProductId = 2,
+                ProductId = "2",
                 Quantity = 7,
             },
             new OrderLine()
             {
-                ProductId = 3,
+                ProductId = "3",
                 Quantity = 12,
             },
 
             new OrderLine()
             {
-                ProductId = 3,
+                ProductId = "3",
                 Quantity = 5,
             },
         };
@@ -75,71 +75,71 @@ namespace ProductReservationTool.Tests
         {
             new Reservation()
             {
-                ReservationId = 1,
+                ReservationId = "1",
                 CreatedAt = DateTime.Now.AddMinutes(-18),
                 IsAvailable = true,
                 OrderLines = new List<OrderLine>()
                 {
                     new OrderLine()
                     {
-                        ProductId = 1,
+                        ProductId = "1",
                         Quantity = 3,
                     },
                     new OrderLine()
                     {
-                        ProductId = 2,
+                        ProductId = "2",
                         Quantity = 6,
                     }
                 }
             },
             new Reservation()
             {
-                ReservationId = 2,
+                ReservationId = "2",
                 CreatedAt = DateTime.Now.AddMinutes(-20),
                 IsAvailable = true,
                 OrderLines = new List<OrderLine>()
                 {
                     new OrderLine()
                     {
-                        ProductId = 3,
+                        ProductId = "3",
                         Quantity = 12,
                     }
                 }
             },
             new Reservation()
             {
-                ReservationId = 3,
+                ReservationId = "3",
                 CreatedAt = DateTime.Now.AddMinutes(-1),
                 IsAvailable = true,
                 OrderLines = new List<OrderLine>()
                 {
                     new OrderLine()
                     {
-                        ProductId = 1,
+                        ProductId = "1",
                         Quantity = 2,
                     },
                     new OrderLine()
                     {
-                        ProductId = 2,
+                        ProductId = "2",
                         Quantity = 7,
                     },
                     new OrderLine()
                     {
-                        ProductId = 3,
+                        ProductId = "3",
                         Quantity = 12,
                     },
                 }
             },
             new Reservation()
             {
-                ReservationId = 4,
+                ReservationId = "4",
                 CreatedAt = DateTime.Now,
                 IsAvailable = false,
                 OrderLines = new List<OrderLine>()
                 {
                     new OrderLine()
                     {
-                        ProductId = 3,
+                        ProductId = "3",
                         Quantity = 5,
                     },
                 }

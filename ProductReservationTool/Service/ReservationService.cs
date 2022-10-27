@@ -56,13 +56,14 @@ namespace ProductReservationTool.Service
             }
         }
 
-        public int GetNewReservationID()
+        public string GetNewReservationID()
         {
             Reservation? lastResa = repository.GetReservation();
-            return (lastResa != null) ? lastResa.ReservationId + 1 : 1;
+            var newID = (lastResa != null) ? int.Parse(lastResa.ReservationId) + 1 : 1;
+            return newID.ToString();
         }
 
-        public Reservation? GetByID(int id)
+        public Reservation? GetByID(string id)
         {
             return repository.GetReservation(id);
         }
@@ -83,12 +84,12 @@ namespace ProductReservationTool.Service
             repository.UpdateReservation(reservation);
         }
 
-        public List<Reservation> GetReservationsForProduct(int ID)
+        public List<Reservation> GetReservationsForProduct(string id)
         {
             var reservations = new List<Reservation>();
             foreach (var reservation in GetAll())
             {
-                var products = reservation.OrderLines.Where(o => o.ProductId == ID);
+                var products = reservation.OrderLines.Where(o => o.ProductId == id);
                 if(products != null && products.Count() > 0)
                     reservations.Add(reservation);
             }

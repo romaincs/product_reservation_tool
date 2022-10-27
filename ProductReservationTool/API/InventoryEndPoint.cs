@@ -43,7 +43,7 @@ namespace ProductReservationTool.API
         }
 
 
-        public Reservation? GetReservationByID(int id)
+        public Reservation? GetReservationByID(string id)
         {
             var resService = new ReservationService(repository);
             return resService.GetByID(id);
@@ -68,13 +68,13 @@ namespace ProductReservationTool.API
             return prodService.GetAll().ToList();
         }
 
-        public Product? GetProductByID(int id)
+        public Product? GetProductByID(string id)
         {
             var prodService = new ProductService(repository);
             return prodService.GetByID(id);
         }
 
-        public void SetProduct(int productId, int quantity)
+        public void SetProduct(string productId, int quantity)
         {
             var prodService = new ProductService(repository);
             prodService.SetProduct(productId, quantity);

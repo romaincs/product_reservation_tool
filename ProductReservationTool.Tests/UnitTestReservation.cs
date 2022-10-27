@@ -13,9 +13,9 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestCreate_Single()
         {
-            var order1 = new OrderLine() { ProductId = 1, Quantity = 10 };
-            var order2 = new OrderLine() { ProductId = 2, Quantity = 6 };
-            var order3 = new OrderLine() { ProductId = 3, Quantity = 7 };
+            var order1 = new OrderLine() { ProductId = "1", Quantity = 10 };
+            var order2 = new OrderLine() { ProductId = "2", Quantity = 6 };
+            var order3 = new OrderLine() { ProductId = "3", Quantity = 7 };
             var orders = new List<OrderLine>() { order1, order2, order3 };
 
             try
@@ -36,9 +36,9 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestCreate_Bulk()
         {
-            var order1 = new OrderLine() { ProductId = 1, Quantity = 4 };
-            var order2 = new OrderLine() { ProductId = 2, Quantity = 2 };
-            var order3 = new OrderLine() { ProductId = 3, Quantity = 8 };
+            var order1 = new OrderLine() { ProductId = "1", Quantity = 4 };
+            var order2 = new OrderLine() { ProductId = "2", Quantity = 2 };
+            var order3 = new OrderLine() { ProductId = "3", Quantity = 8 };
             var orders = new List<OrderLine>() { order1, order2, order3 };
 
             try
@@ -71,7 +71,7 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestCreate_UnknownProduct()
         {
-            var order1 = new OrderLine() { ProductId = 999, Quantity = 10 };
+            var order1 = new OrderLine() { ProductId = "999", Quantity = 10 };
             var orders = new List<OrderLine>() { order1 };
 
             try
@@ -95,9 +95,9 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestCreate_SameProduct()
         {
-            var order1 = new OrderLine() { ProductId = 1, Quantity = 10 };
-            var order2 = new OrderLine() { ProductId = 1, Quantity = 6 };
-            var order3 = new OrderLine() { ProductId = 2, Quantity = 7 };
+            var order1 = new OrderLine() { ProductId = "1", Quantity = 10 };
+            var order2 = new OrderLine() { ProductId = "1", Quantity = 6 };
+            var order3 = new OrderLine() { ProductId = "2", Quantity = 7 };
             var orders = new List<OrderLine>() { order1, order2, order3 };
 
             try
@@ -121,7 +121,7 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestCreate_OutofStockProduct()
         {
-            var order1 = new OrderLine() { ProductId = 3, Quantity = 10 };
+            var order1 = new OrderLine() { ProductId = "3", Quantity = 10 };
             var orders = new List<OrderLine>() { order1 };
 
             try
@@ -147,9 +147,11 @@ namespace ProductReservationTool.Tests
                 var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
-                var reservations = inventoryEndPoint.GetReservations(0, 1);
-                if (reservations.Count != 1)
-                    Assert.Fail("Must return 1 values");
+                const int LIMIT = 1;
+
+                var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
+                if (reservations.Count != LIMIT)
+                    Assert.Fail($"Must return {LIMIT} values, not {reservations.Count}");
             }
             catch (Exception ex)
             {
@@ -165,9 +167,11 @@ namespace ProductReservationTool.Tests
                 var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
-                var reservations = inventoryEndPoint.GetReservations(0, 3);
-                if (reservations.Count != 3)
-                    Assert.Fail("Must return 3 values, not " + reservations.Count);
+                const int LIMIT = 3;
+
+                var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
+                if (reservations.Count != LIMIT)
+                    Assert.Fail($"Must return {LIMIT} values, not " + reservations.Count);
             }
             catch (Exception ex)
             {
@@ -207,21 +211,23 @@ namespace ProductReservationTool.Tests
                 var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
-                var reservation = inventoryEndPoint.GetReservationByID(1);
+                const string ID = "1";
+
+                var reservation = inventoryEndPoint.GetReservationByID(ID);
                 if (reservation == null)
-                    Assert.Fail($"reservation #1 does not exists.");
+                    Assert.Fail($"reservation #{ID} does not exists.");
 
                 if (!reservation.IsAvailable)
                     Assert.Fail("existing reservation is not available.");
 
-                inventoryEndPoint.SetProduct(1, 0);
+                inventoryEndPoint.SetProduct(ID, 0);
 
-                reservation = inventoryEndPoint.GetReservationByID(1);
+                reservation = inventoryEndPoint.GetReservationByID(ID);
                 if (reservation == null)
-                    Assert.Fail($"reservation #1 does not exists.");
+                    Assert.Fail($"reservation #{ID} does not exists.");
 
                 if (reservation.IsAvailable) 
-                    Assert.Fail("reservation #1 still available. Should not be.");
+                    Assert.Fail($"reservation #{ID} still available. Should not be.");
             }
             catch (Exception ex)
             {
@@ -237,21 +243,25 @@ namespace ProductReservationTool.Tests
                 var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
-                var reservation = inventoryEndPoint.GetReservationByID(4);
+                const string RESA_ID = "4";
+                const string PRODUCT_ID = "3";
+                const int QUANTITY = 12;
+
+                var reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
                 if (reservation == null)
-                    Assert.Fail($"reservation #4 does not exists.");
+                    Assert.Fail($"reservation #{RESA_ID} does not exists.");
 
                 if (reservation.IsAvailable)
                     Assert.Fail("existing reservation is available. Should not be.");
 
-                inventoryEndPoint.SetProduct(3, 12);
+                inventoryEndPoint.SetProduct(PRODUCT_ID, QUANTITY);
 
-                reservation = inventoryEndPoint.GetReservationByID(3);
+                reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
                 if (reservation == null)
-                    Assert.Fail($"reservation #4 does not exists.");
+                    Assert.Fail($"reservation #{RESA_ID} does not exists.");
 
                 if (!reservation.IsAvailable)
-                    Assert.Fail("reservation #4 still unavailable. Should be.");
+                    Assert.Fail($"reservation #{RESA_ID} still unavailable. Should be.");
             }
             catch (Exception ex)
             {
@@ -267,9 +277,11 @@ namespace ProductReservationTool.Tests
                 var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
-                var reservations = inventoryEndPoint.GetReservations(0, 3);
-                if (reservations.Count != 3)
-                    Assert.Fail("Must return 3 values, not " + reservations.Count);
+                const int LIMIT = 3;
+
+                var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
+                if (reservations.Count != LIMIT)
+                    Assert.Fail($"Must return {LIMIT} values, not " + reservations.Count);
                 if (reservations[0].CreatedAt > reservations[1].CreatedAt || reservations[1].CreatedAt > reservations[2].CreatedAt)
                     Assert.Fail("reservations return are not sorted by date. Should be.");
                     

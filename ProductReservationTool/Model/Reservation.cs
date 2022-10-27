@@ -8,7 +8,7 @@ namespace ProductReservationTool.Model
 {
     public class Reservation
     {
-        public int ReservationId { get; set;  }
+        public string ReservationId { get; set;  }
         public DateTime CreatedAt { get; set; }
         public List<OrderLine> OrderLines { get; set; }
         public bool IsAvailable { get; set; }

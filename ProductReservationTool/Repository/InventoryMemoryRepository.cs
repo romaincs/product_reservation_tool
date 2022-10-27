@@ -46,10 +46,10 @@ namespace ProductReservationTool.Repository
             if (products.Count == 0)
                 return null;
 
-            return products.OrderByDescending(o => o.ProductId).FirstOrDefault();
+            return products.OrderByDescending(o => int.Parse(o.ProductId)).FirstOrDefault();
         }
 
-        public Product? GetProduct(int id)
+        public Product? GetProduct(string id)
         {
             return products.Where(r => r.ProductId == id).FirstOrDefault();
         }
@@ -79,10 +79,10 @@ namespace ProductReservationTool.Repository
 
         public Reservation? GetReservation()
         {
-            return reservations.OrderByDescending(r => r.ReservationId).FirstOrDefault();
+            return reservations.OrderByDescending(r => int.Parse(r.ReservationId)).FirstOrDefault();
         }
 
-        public Reservation? GetReservation(int id)
+        public Reservation? GetReservation(string id)
         {
             return reservations.Where(r => r.ReservationId == id).FirstOrDefault();
         }

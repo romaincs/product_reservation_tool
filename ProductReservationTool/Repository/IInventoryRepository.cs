@@ -12,12 +12,12 @@ namespace ProductReservationTool.Repository
         IQueryable<Product> GetProducts();
         void InsertProduct(Product product);
         Product? GetProduct();
-        public Product? GetProduct(int id);
+        public Product? GetProduct(string id);
         public void UpdateProduct(Product product);
         IQueryable<Reservation> GetReservations();
         void InsertReservation(Reservation reservation);
         Reservation? GetReservation();
-        Reservation? GetReservation(int id);
+        Reservation? GetReservation(string id);
         public void UpdateReservation(Reservation reservation);
         void InsertOrderLine(OrderLine order);
 

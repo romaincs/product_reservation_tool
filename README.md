@@ -17,7 +17,7 @@ you will implement the back-end.
 
 ## TODO
  - [ ] Review scope methods and classes
- - [ ] Change ID from int to string
+ - [X] Change ID from int to string
  - [X] Test reservations is a FIFO
  - [X] Id uniq
  - [X] Make a resa with out-of-stock product

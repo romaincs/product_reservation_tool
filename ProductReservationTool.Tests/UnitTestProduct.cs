@@ -25,7 +25,7 @@ namespace ProductReservationTool.Tests
                 for(int i = 0; i < products.Count; i++)
                 {
                     var product = inventoryEndPoint.CreateProduct(products[i]);
-                    if (product.ProductId == 0)
+                    if (product.ProductId == "0")
                         Assert.Fail("ProductId is zero, should be positive");
                 }
             }
@@ -79,14 +79,17 @@ namespace ProductReservationTool.Tests
                 var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
-                inventoryEndPoint.SetProduct(1, 12);
+                const string ID = "2";
+                const int QUANTITY = 12;
 
-                var product = inventoryEndPoint.GetProductByID(1);
+                inventoryEndPoint.SetProduct(ID, QUANTITY);
+
+                var product = inventoryEndPoint.GetProductByID("1");
                 if (product == null)
-                    Assert.Fail("Product #1 does not exist");
+                    Assert.Fail($"Product #{ID} does not exist");
 
-                if (product.Quantity != 12)
-                    Assert.Fail($"Product #1 has Quantity = {product.Quantity}, should has 12");
+                if (product.Quantity != QUANTITY)
+                    Assert.Fail($"Product #1 has Quantity = {product.Quantity}, should has {QUANTITY}");
             }
             catch (Exception ex)
             {

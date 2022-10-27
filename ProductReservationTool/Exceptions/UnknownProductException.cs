@@ -8,7 +8,7 @@ namespace ProductReservationTool.Exceptions
 {
     public class UnknownProductException : Exception
     {
-        public UnknownProductException(int productID)
+        public UnknownProductException(string productID)
             : base($"unknown product #" + productID)
         {
 
