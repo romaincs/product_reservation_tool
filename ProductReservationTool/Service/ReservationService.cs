@@ -22,6 +22,7 @@ namespace ProductReservationTool.Service
         public Reservation Create(List<OrderLine> orders)
         {
             CheckDuplicates(orders);
+            CheckProductsExits(orders);
 
             foreach(OrderLine order in orders)
             {
@@ -42,6 +43,17 @@ namespace ProductReservationTool.Service
 
             if (duplicates.Count > 0)
                 throw new DuplicateProductInReservationException();
+        }
+
+        private void CheckProductsExits(List<OrderLine> orders)
+        {
+            var prodService = new ProductService(repository);
+            foreach (var order in orders)
+            {
+                var product = prodService.GetByID(order.ProductId);
+                if(product == null)
+                    throw new UnknownProductException(order.ProductId);
+            }
         }
 
         public int GetNewReservationID()

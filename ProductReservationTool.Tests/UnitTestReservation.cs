@@ -36,11 +36,10 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestCreate_Bulk()
         {
-            var order1 = new OrderLine() { ProductId = 4, Quantity = 4 };
-            var order2 = new OrderLine() { ProductId = 5, Quantity = 2 };
-            var order3 = new OrderLine() { ProductId = 6, Quantity = 8 };
-            var order4 = new OrderLine() { ProductId = 7, Quantity = 12 };
-            var orders = new List<OrderLine>() { order1, order2, order3, order4 };
+            var order1 = new OrderLine() { ProductId = 1, Quantity = 4 };
+            var order2 = new OrderLine() { ProductId = 2, Quantity = 2 };
+            var order3 = new OrderLine() { ProductId = 3, Quantity = 8 };
+            var orders = new List<OrderLine>() { order1, order2, order3 };
 
             try
             {
@@ -62,6 +61,30 @@ namespace ProductReservationTool.Tests
                 if(reservations.Count != count + ITEMS_NB)
                     Assert.Fail("Must return " + count + ITEMS_NB + " values, not " + reservations.Count);
 
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void TestCreate_UnknownProduct()
+        {
+            var order1 = new OrderLine() { ProductId = 999, Quantity = 10 };
+            var orders = new List<OrderLine>() { order1 };
+
+            try
+            {
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
+                inventoryEndPoint.CreateReservation(orders);
+                Assert.Fail($"reservation created without error. Should generate one.");
+            }
+            catch (UnknownProductException)
+            {
+                // Success
             }
             catch (Exception ex)
             {
