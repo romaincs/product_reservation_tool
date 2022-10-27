@@ -18,6 +18,11 @@ namespace ProductReservationTool.API
             repository = new InventoryMemoryRepository();
         }
 
+        public InventoryEndPoint(IInventoryRepository rep)
+        {
+            repository = rep;
+        }
+
         #region RESERVATIONS --------------------------------------------------------------------------------
         public Reservation CreateReservation(List<OrderLine> order)
         {

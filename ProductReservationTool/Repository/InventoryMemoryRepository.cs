@@ -16,12 +16,22 @@ namespace ProductReservationTool.Repository
 
         public InventoryMemoryRepository()
         {
-            if(reservations == null)
-                reservations = new List<Reservation>();
             if (products == null)
                 products = new List<Product>();
-            if(orders == null)
+            if (orders == null)
                 orders = new List<OrderLine>();
+            if (reservations == null)
+                reservations = new List<Reservation>();
+        }
+
+        public InventoryMemoryRepository(List<Product> initProducts, List<OrderLine> initOrders, List<Reservation> initResa)
+        {
+            if (products == null)
+                products = initProducts;
+            if (orders == null)
+                orders = initOrders;
+            if (reservations == null)
+                reservations = initResa;
         }
 
         public void InsertProduct(Product product)

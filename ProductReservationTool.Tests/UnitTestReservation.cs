@@ -1,6 +1,7 @@
 using ProductReservationTool.API;
 using ProductReservationTool.Exceptions;
 using ProductReservationTool.Model;
+using ProductReservationTool.Repository;
 using ProductReservationTool.Service;
 using System.Net.Http.Headers;
 
@@ -19,7 +20,9 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 var reservation = inventoryEndPoint.CreateReservation(orders);
                 if (reservation == null)
                     Assert.Fail("Reservation is null");
@@ -41,7 +44,9 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 const int ITEMS_NB = 10;
                 var reservations = inventoryEndPoint.GetAllReservations();
                 int count = reservations.Count();
@@ -74,7 +79,9 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 inventoryEndPoint.CreateReservation(orders);
                 Assert.Fail($"reservation created without error. Should generate one.");
             }
@@ -91,11 +98,11 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Single()
         {
-            TestCreate_Bulk();
-
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 var reservations = inventoryEndPoint.GetReservations(0, 1);
                 if (reservations.Count != 1)
                     Assert.Fail("Must return 1 values");
@@ -109,11 +116,11 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Limit()
         {
-            TestCreate_Bulk();
-
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 var reservations = inventoryEndPoint.GetReservations(0, 3);
                 if (reservations.Count != 3)
                     Assert.Fail("Must return 3 values, not " + reservations.Count);
@@ -127,11 +134,11 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Unique()
         {
-            TestCreate_Bulk();
-
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 var reservations = inventoryEndPoint.GetAllReservations();
 
                 var duplicates = reservations.GroupBy(r => r.ReservationId)

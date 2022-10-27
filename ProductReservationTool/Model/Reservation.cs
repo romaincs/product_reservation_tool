@@ -11,6 +11,6 @@ namespace ProductReservationTool.Model
         public int ReservationId { get; set;  }
         public DateTime CreatedAt { get; set; }
         public List<OrderLine> OrderLines { get; set; }
-        bool IsAvailable { get; }
+        public bool IsAvailable { get; set; }
     }
 }

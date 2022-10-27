@@ -1,5 +1,6 @@
 using ProductReservationTool.API;
 using ProductReservationTool.Model;
+using ProductReservationTool.Repository;
 using ProductReservationTool.Service;
 using System.Net.Http.Headers;
 
@@ -12,13 +13,15 @@ namespace ProductReservationTool.Tests
         public void TestCreate_Bulk()
         {
             var product1 = new Product() { Quantity = 10 };
-            var product2 = new Product() { Quantity =  3 };
+            var product2 = new Product() { Quantity = 3 };
             var product3 = new Product() { Quantity = 7 };
             var products = new List<Product>() { product1, product2, product3 };
 
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 for(int i = 0; i < products.Count; i++)
                 {
                     var product = inventoryEndPoint.CreateProduct(products[i]);
@@ -35,11 +38,11 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Single()
         {
-            TestCreate_Bulk();
-
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 var products = inventoryEndPoint.GetProducts(0, 1);
                 if (products.Count != 1)
                     Assert.Fail($"GetProducts return {products.Count}, should return 1");
@@ -53,11 +56,11 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Limit()
         {
-            TestCreate_Bulk();
-
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 var products = inventoryEndPoint.GetProducts(0, 2);
                 if (products.Count != 2)
                     Assert.Fail($"GetProducts return {products.Count}, should return 2");
@@ -71,11 +74,11 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_SetQuantity()
         {
-            TestCreate_Bulk();
-
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 inventoryEndPoint.SetProduct(1, 12);
 
                 var product = inventoryEndPoint.GetProductByID(1);
@@ -94,11 +97,11 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Unique()
         {
-            TestCreate_Bulk();
-
             try
             {
-                var inventoryEndPoint = new InventoryEndPoint();
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
                 var products = inventoryEndPoint.GetAllProducts();
 
                 var duplicates = products.GroupBy(p => p.ProductId)
