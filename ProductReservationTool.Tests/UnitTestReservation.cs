@@ -198,5 +198,65 @@ namespace ProductReservationTool.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        [TestMethod]
+        public void TestGet_ReservationUnavailability()
+        {
+            try
+            {
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
+                var reservation = inventoryEndPoint.GetReservationByID(1);
+                if (reservation == null)
+                    Assert.Fail($"reservation #1 does not exists.");
+
+                if (!reservation.IsAvailable)
+                    Assert.Fail("existing reservation is not available.");
+
+                inventoryEndPoint.SetProduct(1, 0);
+
+                reservation = inventoryEndPoint.GetReservationByID(1);
+                if (reservation == null)
+                    Assert.Fail($"reservation #1 does not exists.");
+
+                if (reservation.IsAvailable) 
+                    Assert.Fail("reservation #1 still available. Should not be.");
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void TestGet_ReservationAvailability()
+        {
+            try
+            {
+                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+
+                var reservation = inventoryEndPoint.GetReservationByID(4);
+                if (reservation == null)
+                    Assert.Fail($"reservation #4 does not exists.");
+
+                if (reservation.IsAvailable)
+                    Assert.Fail("existing reservation is available. Should not be.");
+
+                inventoryEndPoint.SetProduct(3, 12);
+
+                reservation = inventoryEndPoint.GetReservationByID(3);
+                if (reservation == null)
+                    Assert.Fail($"reservation #4 does not exists.");
+
+                if (!reservation.IsAvailable)
+                    Assert.Fail("reservation #4 still unavailable. Should be.");
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }

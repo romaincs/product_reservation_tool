@@ -26,12 +26,9 @@ namespace ProductReservationTool.Repository
 
         public InventoryMemoryRepository(List<Product> initProducts, List<OrderLine> initOrders, List<Reservation> initResa)
         {
-            if (products == null)
-                products = initProducts;
-            if (orders == null)
-                orders = initOrders;
-            if (reservations == null)
-                reservations = initResa;
+            products = initProducts;
+            orders = initOrders;
+            reservations = initResa;
         }
 
         public void InsertProduct(Product product)
@@ -63,7 +60,7 @@ namespace ProductReservationTool.Repository
             {
                 if(product.ProductId == product.ProductId)
                 {
-                    products[i] = product;
+                    products[i].Quantity = product.Quantity;
                     return;
                 }
             }
@@ -91,6 +88,19 @@ namespace ProductReservationTool.Repository
         public Reservation? GetReservation(int id)
         {
             return reservations.Where(r => r.ReservationId == id).FirstOrDefault();
+        }
+
+        public void UpdateReservation(Reservation reservation)
+        {
+            for (int i = 0; i < reservations.Count; i++)
+            {
+                if (reservation.ReservationId == reservation.ReservationId)
+                {
+                    reservations[i].OrderLines = reservation.OrderLines;
+                    reservations[i].IsAvailable = reservation.IsAvailable;
+                    return;
+                }
+            }
         }
         #endregion
 

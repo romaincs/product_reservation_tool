@@ -1,4 +1,5 @@
-﻿using ProductReservationTool.Model;
+﻿using ProductReservationTool.Exceptions;
+using ProductReservationTool.Model;
 using ProductReservationTool.Repository;
 using System;
 using System.Collections.Generic;
@@ -49,9 +50,18 @@ namespace ProductReservationTool.Service
         {
             var product = GetByID(productId);
             if(product == null)
-                throw new Exception($"Product #{productId} does not exist");
+                throw new UnknownProductException(productId);
 
             product.Quantity = quantity;
+            if(quantity == 0)
+            {
+                var resaService = new ReservationService(repository);
+                var reservations = resaService.GetReservationsForProduct(product.ProductId);
+                foreach (var reservation in reservations)
+                {
+                    resaService.UpdateAvailibility(reservation, false);
+                }
+            }
 
             repository.UpdateProduct(product);
         }

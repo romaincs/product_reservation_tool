@@ -18,6 +18,7 @@ namespace ProductReservationTool.Repository
         void InsertReservation(Reservation reservation);
         Reservation? GetReservation();
         Reservation? GetReservation(int id);
+        public void UpdateReservation(Reservation reservation);
         void InsertOrderLine(OrderLine order);
 
     }

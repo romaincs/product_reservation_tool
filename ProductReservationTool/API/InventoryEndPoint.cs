@@ -41,6 +41,13 @@ namespace ProductReservationTool.API
             var resService = new ReservationService(repository);
             return resService.GetAll().ToList();
         }
+
+
+        public Reservation? GetReservationByID(int id)
+        {
+            var resService = new ReservationService(repository);
+            return resService.GetByID(id);
+        }
         #endregion
 
         #region PRODUCTS ------------------------------------------------------------------------------------

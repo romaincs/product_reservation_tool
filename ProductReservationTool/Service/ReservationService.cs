@@ -62,6 +62,11 @@ namespace ProductReservationTool.Service
             return (lastResa != null) ? lastResa.ReservationId + 1 : 1;
         }
 
+        public Reservation? GetByID(int id)
+        {
+            return repository.GetReservation(id);
+        }
+
         public IQueryable<Reservation> Get(int cursor, int limit)
         {
             return repository.GetReservations().Skip(cursor).Take(limit);
@@ -70,6 +75,24 @@ namespace ProductReservationTool.Service
         public IQueryable<Reservation> GetAll()
         {
             return repository.GetReservations();
+        }
+
+        public void UpdateAvailibility(Reservation reservation, bool avaibility)
+        {
+            reservation.IsAvailable = avaibility;
+            repository.UpdateReservation(reservation);
+        }
+
+        public List<Reservation> GetReservationsForProduct(int ID)
+        {
+            var reservations = new List<Reservation>();
+            foreach (var reservation in GetAll())
+            {
+                var products = reservation.OrderLines.Where(o => o.ProductId == ID);
+                if(products != null && products.Count() > 0)
+                    reservations.Add(reservation);
+            }
+            return reservations;
         }
     }
 }
