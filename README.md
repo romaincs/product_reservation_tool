@@ -16,3 +16,11 @@ you will implement the back-end.
 - A reservation is available only if the inventory has enough products
 
 ## TODO
+ - [ ] Review scope methods and classes
+ - [ ] Change ID from int to string
+ - [ ] Test reservations is a FIFO (transform in queue ?)
+ - [X] Id uniq
+ - [X] Make a resa with out-of-stock product
+ - [X] Prevent order same product twice in a reservation
+ - [X] Prevent order an unknown product
+ - [X] Set avaibility of reservation regarding products inventory
