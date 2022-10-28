@@ -1,13 +1,9 @@
-﻿using ProductReservationTool.Model;
-using ProductReservationTool.Repository;
-using ProductReservationTool.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProductReservationTool.Data;
+using ProductReservationTool.Domain.Entities;
+using ProductReservationTool.Domain.Interfaces;
+using ProductReservationTool.Domain.UseCases;
 
-namespace ProductReservationTool.API
+namespace ProductReservationTool.Presentation
 {
     public class InventoryEndPoint : IBackEndService
     {
@@ -23,7 +19,6 @@ namespace ProductReservationTool.API
             repository = rep;
         }
 
-        #region RESERVATIONS --------------------------------------------------------------------------------
         public Reservation CreateReservation(List<OrderLine> order)
         {
             var resService = new ReservationService(repository);
@@ -48,9 +43,7 @@ namespace ProductReservationTool.API
             var resService = new ReservationService(repository);
             return resService.GetByID(id);
         }
-        #endregion
 
-        #region PRODUCTS ------------------------------------------------------------------------------------
         public Product CreateProduct(Product product)
         {
             var prodService = new ProductService(repository);
@@ -78,7 +71,6 @@ namespace ProductReservationTool.API
         {
             var prodService = new ProductService(repository);
             prodService.SetProduct(productId, quantity);
-        } 
-        #endregion
+        }
     }
 }

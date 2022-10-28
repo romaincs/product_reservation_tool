@@ -15,8 +15,9 @@ you will implement the back-end.
 - It is not possible to order an unknown product
 - A reservation is available only if the inventory has enough products
 
-## TODO
+## 
  - [ ] Review scope methods and classes
+ - [X] Reorganize class with clean archi
  - [X] Change ID from int to string
  - [X] Test reservations is a FIFO
  - [X] Id uniq

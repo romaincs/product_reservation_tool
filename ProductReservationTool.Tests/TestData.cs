@@ -1,10 +1,4 @@
-﻿using ProductReservationTool.Model;
-using ProductReservationTool.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProductReservationTool.Domain.Entities;
 
 namespace ProductReservationTool.Tests
 {

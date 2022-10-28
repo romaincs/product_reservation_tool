@@ -1,12 +1,7 @@
-﻿using ProductReservationTool.Model;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProductReservationTool.Domain.Entities;
+using ProductReservationTool.Domain.Interfaces;
 
-namespace ProductReservationTool.Repository
+namespace ProductReservationTool.Data
 {
     public class InventoryMemoryRepository : IInventoryRepository
     {
@@ -56,9 +51,9 @@ namespace ProductReservationTool.Repository
 
         public void UpdateProduct(Product product)
         {
-            for(int i = 0; i < products.Count; i++)
+            for (int i = 0; i < products.Count; i++)
             {
-                if(product.ProductId == product.ProductId)
+                if (product.ProductId == product.ProductId)
                 {
                     products[i].Quantity = product.Quantity;
                     return;
@@ -105,7 +100,7 @@ namespace ProductReservationTool.Repository
         public void InsertOrderLine(OrderLine order)
         {
             orders.Add(order);
-        } 
+        }
         #endregion
     }
 }

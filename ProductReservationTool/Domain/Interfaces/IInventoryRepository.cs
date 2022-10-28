@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProductReservationTool.Model;
+﻿using ProductReservationTool.Domain.Entities;
 
-namespace ProductReservationTool.Repository
+namespace ProductReservationTool.Domain.Interfaces
 {
     public interface IInventoryRepository
     {

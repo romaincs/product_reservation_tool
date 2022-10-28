@@ -1,14 +1,8 @@
-﻿using ProductReservationTool.Exceptions;
-using ProductReservationTool.Model;
-using ProductReservationTool.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProductReservationTool.Domain.Entities;
+using ProductReservationTool.Domain.Interfaces;
+using ProductReservationTool.Domain.Exceptions;
 
-namespace ProductReservationTool.Service
+namespace ProductReservationTool.Domain.UseCases
 {
     public class ReservationService
     {
@@ -24,7 +18,7 @@ namespace ProductReservationTool.Service
             CheckDuplicates(orders);
             CheckProductsExits(orders);
 
-            foreach(OrderLine order in orders)
+            foreach (OrderLine order in orders)
             {
                 repository.InsertOrderLine(order);
             }
@@ -51,7 +45,7 @@ namespace ProductReservationTool.Service
             foreach (var order in orders)
             {
                 var product = prodService.GetByID(order.ProductId);
-                if(product == null)
+                if (product == null)
                     throw new UnknownProductException(order.ProductId);
             }
         }
@@ -59,7 +53,7 @@ namespace ProductReservationTool.Service
         public string GetNewReservationID()
         {
             Reservation? lastResa = repository.GetReservation();
-            var newID = (lastResa != null) ? int.Parse(lastResa.ReservationId) + 1 : 1;
+            var newID = lastResa != null ? int.Parse(lastResa.ReservationId) + 1 : 1;
             return newID.ToString();
         }
 
@@ -90,7 +84,7 @@ namespace ProductReservationTool.Service
             foreach (var reservation in GetAll())
             {
                 var products = reservation.OrderLines.Where(o => o.ProductId == id);
-                if(products != null && products.Count() > 0)
+                if (products != null && products.Count() > 0)
                     reservations.Add(reservation);
             }
             return reservations;

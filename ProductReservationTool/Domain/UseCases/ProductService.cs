@@ -1,13 +1,8 @@
-﻿using ProductReservationTool.Exceptions;
-using ProductReservationTool.Model;
-using ProductReservationTool.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProductReservationTool.Domain.Entities;
+using ProductReservationTool.Domain.Exceptions;
+using ProductReservationTool.Domain.Interfaces;
 
-namespace ProductReservationTool.Service
+namespace ProductReservationTool.Domain.UseCases
 {
     public class ProductService
     {
@@ -43,14 +38,14 @@ namespace ProductReservationTool.Service
         public string GetNewProductID()
         {
             Product? lastProd = repository.GetProduct();
-            var newID = (lastProd != null) ? int.Parse(lastProd.ProductId)+1 : 1;
+            var newID = lastProd != null ? int.Parse(lastProd.ProductId) + 1 : 1;
             return newID.ToString();
         }
 
         public void SetProduct(string productId, int quantity)
         {
             var product = GetByID(productId);
-            if(product == null)
+            if (product == null)
                 throw new UnknownProductException(productId);
 
             product.Quantity = quantity;
@@ -68,8 +63,8 @@ namespace ProductReservationTool.Service
             {
                 foreach (var reservation in reservations)
                 {
-                    var orderProduct = reservation.OrderLines.Where(o => o.ProductId == productId).First(); 
-                    if(orderProduct.Quantity < quantity)
+                    var orderProduct = reservation.OrderLines.Where(o => o.ProductId == productId).First();
+                    if (orderProduct.Quantity < quantity)
                     {
                         quantity = quantity - orderProduct.Quantity;
                         resaService.UpdateAvailibility(reservation, true);

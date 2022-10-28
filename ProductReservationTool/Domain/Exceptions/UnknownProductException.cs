@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductReservationTool.Exceptions
+namespace ProductReservationTool.Domain.Exceptions
 {
     public class UnknownProductException : Exception
     {

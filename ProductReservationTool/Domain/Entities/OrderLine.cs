@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductReservationTool.Model
+namespace ProductReservationTool.Domain.Entities
 {
     public class OrderLine
     {

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProductReservationTool.Model;
+﻿using ProductReservationTool.Domain.Entities;
 
-namespace ProductReservationTool.API
+namespace ProductReservationTool.Domain.Interfaces
 {
-    interface IBackEndService
+    internal interface IBackEndService
     {
         Reservation CreateReservation(List<OrderLine> order);
         List<Reservation> GetReservations(int cursor, int limit);

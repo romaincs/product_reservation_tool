@@ -1,8 +1,6 @@
-using ProductReservationTool.API;
-using ProductReservationTool.Model;
-using ProductReservationTool.Repository;
-using ProductReservationTool.Service;
-using System.Net.Http.Headers;
+using ProductReservationTool.Data;
+using ProductReservationTool.Domain.Entities;
+using ProductReservationTool.Presentation;
 
 namespace ProductReservationTool.Tests
 {
