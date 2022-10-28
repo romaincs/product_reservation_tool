@@ -1,5 +1,6 @@
 using ProductReservationTool.Data;
 using ProductReservationTool.Domain.Entities;
+using ProductReservationTool.Domain.UseCases;
 using ProductReservationTool.Presentation;
 
 namespace ProductReservationTool.Tests
@@ -17,7 +18,10 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 for(int i = 0; i < products.Count; i++)
@@ -38,7 +42,10 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 var products = inventoryEndPoint.GetProducts(0, 1);
@@ -56,7 +63,9 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 var products = inventoryEndPoint.GetProducts(0, 2);
@@ -74,7 +83,9 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 const string ID = "2";
@@ -100,7 +111,9 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 var products = inventoryEndPoint.GetAllProducts();

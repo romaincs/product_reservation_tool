@@ -1,6 +1,7 @@
 using ProductReservationTool.Data;
 using ProductReservationTool.Domain.Entities;
 using ProductReservationTool.Domain.Exceptions;
+using ProductReservationTool.Domain.UseCases;
 using ProductReservationTool.Presentation;
 
 namespace ProductReservationTool.Tests
@@ -18,7 +19,10 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 var reservation = inventoryEndPoint.CreateReservation(orders);
@@ -41,7 +45,10 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 const int ITEMS_NB = 10;
@@ -56,7 +63,7 @@ namespace ProductReservationTool.Tests
                 }
 
                 reservations = inventoryEndPoint.GetAllReservations();
-                if(reservations.Count != count + ITEMS_NB)
+                if (reservations.Count != count + ITEMS_NB)
                     Assert.Fail("Must return " + count + ITEMS_NB + " values, not " + reservations.Count);
 
             }
@@ -74,7 +81,10 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 inventoryEndPoint.CreateReservation(orders);
@@ -100,13 +110,16 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 inventoryEndPoint.CreateReservation(orders);
                 Assert.Fail($"reservation created without error. Should generate one.");
             }
-            catch (DuplicateProductException) 
+            catch (DuplicateProductException)
             {
                 // Success
             }
@@ -124,7 +137,10 @@ namespace ProductReservationTool.Tests
 
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 var reservation = inventoryEndPoint.CreateReservation(orders);
@@ -142,7 +158,10 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 const int LIMIT = 1;
@@ -162,7 +181,10 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 const int LIMIT = 3;
@@ -182,7 +204,10 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 var reservations = inventoryEndPoint.GetAllReservations();
@@ -206,7 +231,10 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 const string ID = "1";
@@ -224,7 +252,7 @@ namespace ProductReservationTool.Tests
                 if (reservation == null)
                     Assert.Fail($"reservation #{ID} does not exists.");
 
-                if (reservation.IsAvailable) 
+                if (reservation.IsAvailable)
                     Assert.Fail($"reservation #{ID} still available. Should not be.");
             }
             catch (Exception ex)
@@ -238,7 +266,10 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 const string RESA_ID = "4";
@@ -272,7 +303,10 @@ namespace ProductReservationTool.Tests
         {
             try
             {
-                var imMemRep = new InventoryMemoryRepository(TestData.products, TestData.orders, TestData.reservations);
+                var imMemRep = new InventoryMemoryRepository();
+                var mockService = new MockDataService(imMemRep);
+                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+
                 var inventoryEndPoint = new InventoryEndPoint(imMemRep);
 
                 const int LIMIT = 3;
@@ -282,7 +316,7 @@ namespace ProductReservationTool.Tests
                     Assert.Fail($"Must return {LIMIT} values, not " + reservations.Count);
                 if (reservations[0].CreatedAt > reservations[1].CreatedAt || reservations[1].CreatedAt > reservations[2].CreatedAt)
                     Assert.Fail("reservations return are not sorted by date. Should be.");
-                    
+
             }
             catch (Exception ex)
             {

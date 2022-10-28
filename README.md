@@ -16,7 +16,7 @@ you will implement the back-end.
 - A reservation is available only if the inventory has enough products
 
 ## 
- - [ ] Review scope methods and classes
+ - [X] Create a DBContext singleton class
  - [X] Reorganize class with clean archi
  - [X] Change ID from int to string
  - [X] Test reservations is a FIFO

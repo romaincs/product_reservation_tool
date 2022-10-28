@@ -5,102 +5,84 @@ namespace ProductReservationTool.Data
 {
     public class InventoryMemoryRepository : IInventoryRepository
     {
-        static List<Reservation> reservations;
-        static List<Product> products;
-        static List<OrderLine> orders;
+        DBMemoryContext db;
 
         public InventoryMemoryRepository()
         {
-            if (products == null)
-                products = new List<Product>();
-            if (orders == null)
-                orders = new List<OrderLine>();
-            if (reservations == null)
-                reservations = new List<Reservation>();
-        }
-
-        public InventoryMemoryRepository(List<Product> initProducts, List<OrderLine> initOrders, List<Reservation> initResa)
-        {
-            products = initProducts;
-            orders = initOrders;
-            reservations = initResa;
+            db = DBMemoryContext.GetInstance();
         }
 
         public void InsertProduct(Product product)
         {
-            products.Add(product);
+            db.Products.Add(product);
         }
 
         public IQueryable<Product> GetProducts()
         {
-            return products.AsQueryable();
+            return db.Products.AsQueryable();
         }
 
         public Product? GetProduct()
         {
-            if (products.Count == 0)
+            if (db.Products.Count == 0)
                 return null;
 
-            return products.OrderByDescending(o => int.Parse(o.ProductId)).FirstOrDefault();
+            return db.Products.OrderByDescending(o => int.Parse(o.ProductId)).FirstOrDefault();
         }
 
         public Product? GetProduct(string id)
         {
-            return products.Where(r => r.ProductId == id).FirstOrDefault();
+            return db.Products.Where(r => r.ProductId == id).FirstOrDefault();
         }
 
         public void UpdateProduct(Product product)
         {
-            for (int i = 0; i < products.Count; i++)
+            for (int i = 0; i < db.Products.Count; i++)
             {
                 if (product.ProductId == product.ProductId)
                 {
-                    products[i].Quantity = product.Quantity;
+                    db.Products[i].Quantity = product.Quantity;
                     return;
                 }
             }
         }
 
-        #region RESERVATIONS --------------------------------------------------------------------------------
         public IQueryable<Reservation> GetReservations()
         {
-            return reservations.OrderBy(r => r.CreatedAt).AsQueryable();
+            return db.Reservations.OrderBy(r => r.CreatedAt).AsQueryable();
         }
 
         public void InsertReservation(Reservation reservation)
         {
-            reservations.Add(reservation);
+            db.Reservations.Add(reservation);
         }
 
         public Reservation? GetReservation()
         {
-            return reservations.OrderByDescending(r => int.Parse(r.ReservationId)).FirstOrDefault();
+            return db.Reservations.OrderByDescending(r => int.Parse(r.ReservationId)).FirstOrDefault();
         }
 
         public Reservation? GetReservation(string id)
         {
-            return reservations.Where(r => r.ReservationId == id).FirstOrDefault();
+            return db.Reservations.Where(r => r.ReservationId == id).FirstOrDefault();
         }
 
         public void UpdateReservation(Reservation reservation)
         {
-            for (int i = 0; i < reservations.Count; i++)
+            for (int i = 0; i < db.Reservations.Count; i++)
             {
                 if (reservation.ReservationId == reservation.ReservationId)
                 {
-                    reservations[i].OrderLines = reservation.OrderLines;
-                    reservations[i].IsAvailable = reservation.IsAvailable;
+                    db.Reservations[i].OrderLines = reservation.OrderLines;
+                    db.Reservations[i].IsAvailable = reservation.IsAvailable;
                     return;
                 }
             }
         }
-        #endregion
 
-        #region ORDER LINES ---------------------------------------------------------------------------------
         public void InsertOrderLine(OrderLine order)
         {
-            orders.Add(order);
+            db.Orders.Add(order);
         }
-        #endregion
     }
 }

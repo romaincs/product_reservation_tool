@@ -4,7 +4,7 @@ namespace ProductReservationTool.Tests
 {
     static class TestData
     {
-        public static List<Product> products = new List<Product>()
+        public static List<Product> Products = new List<Product>()
         {
             new Product()
             {
@@ -23,7 +23,7 @@ namespace ProductReservationTool.Tests
             }
         };
 
-        public static List<OrderLine> orders = new List<OrderLine>()
+        public static List<OrderLine> Orders = new List<OrderLine>()
         {
             new OrderLine()
             {
@@ -65,7 +65,7 @@ namespace ProductReservationTool.Tests
             },
         };
 
-        public static List<Reservation> reservations = new List<Reservation>()
+        public static List<Reservation> Reservations = new List<Reservation>()
         {
             new Reservation()
             {
