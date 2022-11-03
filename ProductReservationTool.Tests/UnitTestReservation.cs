@@ -9,30 +9,25 @@ namespace ProductReservationTool.Tests
     [TestClass]
     public class UnitTestReservation
     {
+        InventoryEndPoint inventoryEndPoint;
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            var imMemRep = new InventoryMemoryRepository();
+            var mockService = new MockDataService(imMemRep);
+            mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+            inventoryEndPoint = new InventoryEndPoint(imMemRep);
+        }
+
         [TestMethod]
         public void TestCreate_Single()
         {
             var order1 = new OrderLine() { ProductId = "1", Quantity = 10 };
-            var order2 = new OrderLine() { ProductId = "2", Quantity = 6 };
-            var order3 = new OrderLine() { ProductId = "3", Quantity = 7 };
-            var orders = new List<OrderLine>() { order1, order2, order3 };
+            var orders = new List<OrderLine>() { order1 };
 
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
-
-                var reservation = inventoryEndPoint.CreateReservation(orders);
-                if (reservation == null)
-                    Assert.Fail("Reservation is null");
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            var reservation = inventoryEndPoint.CreateReservation(orders);
+            Assert.IsNotNull(reservation);
         }
 
         [TestMethod]
@@ -43,34 +38,19 @@ namespace ProductReservationTool.Tests
             var order3 = new OrderLine() { ProductId = "3", Quantity = 8 };
             var orders = new List<OrderLine>() { order1, order2, order3 };
 
-            try
+            const int ITEMS_NB = 10;
+            var reservations = inventoryEndPoint.GetAllReservations();
+            int count = reservations.Count();
+
+            for (int i = 0; i < ITEMS_NB; i++)
             {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
-
-                const int ITEMS_NB = 10;
-                var reservations = inventoryEndPoint.GetAllReservations();
-                int count = reservations.Count();
-
-                for (int i = 0; i < ITEMS_NB; i++)
-                {
-                    var reservation = inventoryEndPoint.CreateReservation(orders);
-                    if (reservation == null)
-                        Assert.Fail("Reservation is null");
-                }
-
-                reservations = inventoryEndPoint.GetAllReservations();
-                if (reservations.Count != count + ITEMS_NB)
-                    Assert.Fail("Must return " + count + ITEMS_NB + " values, not " + reservations.Count);
-
+                var reservation = inventoryEndPoint.CreateReservation(orders);
+                if (reservation == null)
+                    Assert.Fail("Reservation is null");
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+
+            reservations = inventoryEndPoint.GetAllReservations();
+            Assert.AreEqual(reservations.Count, count + ITEMS_NB);
         }
 
         [TestMethod]
@@ -79,25 +59,7 @@ namespace ProductReservationTool.Tests
             var order1 = new OrderLine() { ProductId = "999", Quantity = 10 };
             var orders = new List<OrderLine>() { order1 };
 
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
-
-                inventoryEndPoint.CreateReservation(orders);
-                Assert.Fail($"reservation created without error. Should generate one.");
-            }
-            catch (UnknownProductException)
-            {
-                // Success
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            Assert.ThrowsException<UnknownProductException>(() => inventoryEndPoint.CreateReservation(orders));
         }
 
         [TestMethod]
@@ -105,28 +67,9 @@ namespace ProductReservationTool.Tests
         {
             var order1 = new OrderLine() { ProductId = "1", Quantity = 10 };
             var order2 = new OrderLine() { ProductId = "1", Quantity = 6 };
-            var order3 = new OrderLine() { ProductId = "2", Quantity = 7 };
-            var orders = new List<OrderLine>() { order1, order2, order3 };
+            var orders = new List<OrderLine>() { order1, order2 };
 
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
-
-                inventoryEndPoint.CreateReservation(orders);
-                Assert.Fail($"reservation created without error. Should generate one.");
-            }
-            catch (DuplicateProductException)
-            {
-                // Success
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            Assert.ThrowsException<DuplicateProductException>(() => inventoryEndPoint.CreateReservation(orders));
         }
 
         [TestMethod]
@@ -135,193 +78,85 @@ namespace ProductReservationTool.Tests
             var order1 = new OrderLine() { ProductId = "3", Quantity = 10 };
             var orders = new List<OrderLine>() { order1 };
 
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
-
-                var reservation = inventoryEndPoint.CreateReservation(orders);
-                if (reservation == null)
-                    Assert.Fail("Reservation is null");
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            var reservation = inventoryEndPoint.CreateReservation(orders);
+            Assert.IsNotNull(reservation);
         }
 
         [TestMethod]
         public void TestGet_Single()
         {
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+            const int LIMIT = 1;
 
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
-
-                const int LIMIT = 1;
-
-                var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
-                if (reservations.Count != LIMIT)
-                    Assert.Fail($"Must return {LIMIT} values, not {reservations.Count}");
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
+            Assert.AreEqual(reservations.Count, LIMIT);
         }
 
         [TestMethod]
         public void TestGet_Limit()
         {
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+            const int LIMIT = 3;
 
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
-
-                const int LIMIT = 3;
-
-                var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
-                if (reservations.Count != LIMIT)
-                    Assert.Fail($"Must return {LIMIT} values, not " + reservations.Count);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
+            Assert.AreEqual(LIMIT, reservations.Count);
         }
 
         [TestMethod]
         public void TestGet_Unique()
         {
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+            var reservations = inventoryEndPoint.GetAllReservations();
 
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+            var duplicates = reservations.GroupBy(r => r.ReservationId)
+                  .Where(r => r.Count() > 1)
+                  .Select(r => r.Key)
+                  .ToList();
 
-                var reservations = inventoryEndPoint.GetAllReservations();
-
-                var duplicates = reservations.GroupBy(r => r.ReservationId)
-                      .Where(r => r.Count() > 1)
-                      .Select(r => r.Key)
-                      .ToList();
-
-                if (duplicates.Count > 0)
-                    Assert.Fail($"Found {duplicates.Count} duplicates, should be zero");
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            Assert.AreEqual(0, duplicates.Count);
         }
 
         [TestMethod]
         public void TestGet_ReservationUnavailability()
         {
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+            const string ID = "1";
 
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+            var reservation = inventoryEndPoint.GetReservationByID(ID);
+            Assert.IsNotNull(reservation);
+            Assert.IsTrue(reservation.IsAvailable);
 
-                const string ID = "1";
+            inventoryEndPoint.SetProduct(ID, 0);
 
-                var reservation = inventoryEndPoint.GetReservationByID(ID);
-                if (reservation == null)
-                    Assert.Fail($"reservation #{ID} does not exists.");
-
-                if (!reservation.IsAvailable)
-                    Assert.Fail("existing reservation is not available.");
-
-                inventoryEndPoint.SetProduct(ID, 0);
-
-                reservation = inventoryEndPoint.GetReservationByID(ID);
-                if (reservation == null)
-                    Assert.Fail($"reservation #{ID} does not exists.");
-
-                if (reservation.IsAvailable)
-                    Assert.Fail($"reservation #{ID} still available. Should not be.");
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            reservation = inventoryEndPoint.GetReservationByID(ID);
+            Assert.IsNotNull(reservation);
+            Assert.IsFalse(reservation.IsAvailable);
         }
 
         [TestMethod]
         public void TestGet_ReservationAvailability()
         {
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+            const string RESA_ID = "4";
+            const string PRODUCT_ID = "3";
+            const int QUANTITY = 12;
 
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+            var reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
+            Assert.IsNotNull(reservation);
+            Assert.IsFalse(reservation.IsAvailable);
 
-                const string RESA_ID = "4";
-                const string PRODUCT_ID = "3";
-                const int QUANTITY = 12;
+            inventoryEndPoint.SetProduct(PRODUCT_ID, QUANTITY);
 
-                var reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
-                if (reservation == null)
-                    Assert.Fail($"reservation #{RESA_ID} does not exists.");
-
-                if (reservation.IsAvailable)
-                    Assert.Fail("existing reservation is available. Should not be.");
-
-                inventoryEndPoint.SetProduct(PRODUCT_ID, QUANTITY);
-
-                reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
-                if (reservation == null)
-                    Assert.Fail($"reservation #{RESA_ID} does not exists.");
-
-                if (!reservation.IsAvailable)
-                    Assert.Fail($"reservation #{RESA_ID} still unavailable. Should be.");
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
+            Assert.IsNotNull(reservation);
+            Assert.IsTrue(reservation.IsAvailable);
         }
 
         [TestMethod]
         public void TestGet_IsFIFO()
         {
-            try
-            {
-                var imMemRep = new InventoryMemoryRepository();
-                var mockService = new MockDataService(imMemRep);
-                mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
+            const int LIMIT = 3;
 
-                var inventoryEndPoint = new InventoryEndPoint(imMemRep);
+            var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
+            Assert.AreEqual(LIMIT, reservations.Count);
 
-                const int LIMIT = 3;
-
-                var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
-                if (reservations.Count != LIMIT)
-                    Assert.Fail($"Must return {LIMIT} values, not " + reservations.Count);
-                if (reservations[0].CreatedAt > reservations[1].CreatedAt || reservations[1].CreatedAt > reservations[2].CreatedAt)
-                    Assert.Fail("reservations return are not sorted by date. Should be.");
-
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            bool isSorted = reservations[0].CreatedAt < reservations[1].CreatedAt && reservations[1].CreatedAt < reservations[2].CreatedAt;
+            Assert.IsTrue(isSorted);
         }
     }
 }
