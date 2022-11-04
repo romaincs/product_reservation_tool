@@ -8,69 +8,143 @@ namespace ProductReservationTool.Presentation
     public class InventoryEndPoint : IBackEndService
     {
         IInventoryRepository repository;
+        ILogger logger;
 
         public InventoryEndPoint()
         {
             repository = new InventoryMemoryRepository();
         }
 
-        public InventoryEndPoint(IInventoryRepository rep)
+        public InventoryEndPoint(IInventoryRepository repository, ILogger logger)
         {
-            repository = rep;
+            this.repository = repository;
+            this.logger = logger;
         }
 
         public Reservation CreateReservation(List<OrderLine> order)
         {
-            var resService = new ReservationService(repository);
-            return resService.Create(order);
+            try
+            {
+                var resService = new ReservationService(repository);
+                return resService.Create(order);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
 
         public List<Reservation> GetReservations(int cursor, int limit)
         {
-            var resService = new ReservationService(repository);
-            return resService.Get(cursor, limit).ToList();
+            try
+            {
+                var resService = new ReservationService(repository);
+                return resService.Get(cursor, limit).ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
 
         public List<Reservation> GetAllReservations()
         {
-            var resService = new ReservationService(repository);
-            return resService.GetAll().ToList();
+            try
+            {
+                var resService = new ReservationService(repository);
+                return resService.GetAll().ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
 
 
         public Reservation? GetReservationByID(string id)
         {
-            var resService = new ReservationService(repository);
-            return resService.GetByID(id);
+            try
+            {
+                var resService = new ReservationService(repository);
+                return resService.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
 
         public Product CreateProduct(Product product)
         {
-            var prodService = new ProductService(repository);
-            return prodService.Create(product);
+            try
+            {
+                var prodService = new ProductService(repository);
+                return prodService.Create(product);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
         public List<Product> GetProducts(int cursor, int limit)
         {
-            var prodService = new ProductService(repository);
-            return prodService.Get(cursor, limit).ToList();
+            try
+            {
+                var prodService = new ProductService(repository);
+                return prodService.Get(cursor, limit).ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
 
         public List<Product> GetAllProducts()
         {
-            var prodService = new ProductService(repository);
-            return prodService.GetAll().ToList();
+            try
+            {
+                var prodService = new ProductService(repository);
+                return prodService.GetAll().ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
 
         public Product? GetProductByID(string id)
         {
-            var prodService = new ProductService(repository);
-            return prodService.GetByID(id);
+            try
+            {
+                var prodService = new ProductService(repository);
+                return prodService.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
 
         public void SetProduct(string productId, int quantity)
         {
-            var prodService = new ProductService(repository);
-            prodService.SetProduct(productId, quantity);
+            try
+            {
+                var prodService = new ProductService(repository);
+                prodService.SetProduct(productId, quantity);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+                throw;
+            }
         }
     }
 }

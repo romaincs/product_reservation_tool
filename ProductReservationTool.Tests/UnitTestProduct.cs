@@ -1,6 +1,8 @@
 using ProductReservationTool.Data;
 using ProductReservationTool.Domain.Entities;
+using ProductReservationTool.Domain.Interfaces;
 using ProductReservationTool.Domain.UseCases;
+using ProductReservationTool.Logger;
 using ProductReservationTool.Presentation;
 
 namespace ProductReservationTool.Tests
@@ -15,8 +17,9 @@ namespace ProductReservationTool.Tests
         {
             var imMemRep = new InventoryMemoryRepository();
             var mockService = new MockDataService(imMemRep);
+            var consoleLogger = new ConsoleLogger(LogLevel.Info);
             mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-            inventoryEndPoint = new InventoryEndPoint(imMemRep);
+            inventoryEndPoint = new InventoryEndPoint(imMemRep, consoleLogger);
         }
 
         [TestMethod]

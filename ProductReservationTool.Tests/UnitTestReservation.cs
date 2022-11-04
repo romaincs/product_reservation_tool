@@ -1,7 +1,9 @@
 using ProductReservationTool.Data;
 using ProductReservationTool.Domain.Entities;
 using ProductReservationTool.Domain.Exceptions;
+using ProductReservationTool.Domain.Interfaces;
 using ProductReservationTool.Domain.UseCases;
+using ProductReservationTool.Logger;
 using ProductReservationTool.Presentation;
 
 namespace ProductReservationTool.Tests
@@ -15,9 +17,10 @@ namespace ProductReservationTool.Tests
         public void SetUp()
         {
             var imMemRep = new InventoryMemoryRepository();
+            var consoleLogger = new ConsoleLogger(LogLevel.Info);
             var mockService = new MockDataService(imMemRep);
             mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-            inventoryEndPoint = new InventoryEndPoint(imMemRep);
+            inventoryEndPoint = new InventoryEndPoint(imMemRep, consoleLogger);
         }
 
         [TestMethod]
