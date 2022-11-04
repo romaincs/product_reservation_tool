@@ -1,25 +1,21 @@
 using ProductReservationTool.Data;
 using ProductReservationTool.Domain.Entities;
-using ProductReservationTool.Domain.Interfaces;
 using ProductReservationTool.Domain.UseCases;
-using ProductReservationTool.Logger;
-using ProductReservationTool.Presentation;
 
 namespace ProductReservationTool.Tests
 {
     [TestClass]
     public class UnitTestProduct
     {
-        InventoryEndPoint inventoryEndPoint;
+        ProductService productService;
 
         [TestInitialize]
         public void SetUp()
         {
             var imMemRep = new InventoryMemoryRepository();
             var mockService = new MockDataService(imMemRep);
-            var consoleLogger = new ConsoleLogger(LogLevel.Info);
             mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-            inventoryEndPoint = new InventoryEndPoint(imMemRep, consoleLogger);
+            productService = new ProductService(imMemRep);
         }
 
         [TestMethod]
@@ -32,7 +28,7 @@ namespace ProductReservationTool.Tests
 
             for (int i = 0; i < products.Count; i++)
             {
-                var product = inventoryEndPoint.CreateProduct(products[i]);
+                var product = productService.Create(products[i]);
                 Assert.AreNotEqual(product.ProductId, "0");
             }
         }
@@ -40,15 +36,15 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Single()
         {
-            var products = inventoryEndPoint.GetProducts(0, 1);
-            Assert.AreEqual(1, products.Count);
+            var products = productService.Get(0, 1);
+            Assert.AreEqual(1, products.Count());
         }
 
         [TestMethod]
         public void TestGet_Limit()
         {
-            var products = inventoryEndPoint.GetProducts(0, 2);
-            Assert.AreEqual(2, products.Count);
+            var products = productService.Get(0, 2);
+            Assert.AreEqual(2, products.Count());
         }
 
         [TestMethod]
@@ -57,9 +53,9 @@ namespace ProductReservationTool.Tests
             const string ID = "2";
             const int QUANTITY = 12;
 
-            inventoryEndPoint.SetProduct(ID, QUANTITY);
+            productService.SetProduct(ID, QUANTITY);
+            var product = productService.GetByID("1");
 
-            var product = inventoryEndPoint.GetProductByID("1");
             Assert.IsNotNull(product);
             Assert.AreEqual(QUANTITY, product.Quantity);
         }
@@ -67,7 +63,7 @@ namespace ProductReservationTool.Tests
         [TestMethod]
         public void TestGet_Unique()
         {
-            var products = inventoryEndPoint.GetAllProducts();
+            var products = productService.GetAll();
 
             var duplicates = products.GroupBy(p => p.ProductId)
                   .Where(p => p.Count() > 1)

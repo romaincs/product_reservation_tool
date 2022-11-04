@@ -1,26 +1,24 @@
 using ProductReservationTool.Data;
 using ProductReservationTool.Domain.Entities;
 using ProductReservationTool.Domain.Exceptions;
-using ProductReservationTool.Domain.Interfaces;
 using ProductReservationTool.Domain.UseCases;
-using ProductReservationTool.Logger;
-using ProductReservationTool.Presentation;
 
 namespace ProductReservationTool.Tests
 {
     [TestClass]
     public class UnitTestReservation
     {
-        InventoryEndPoint inventoryEndPoint;
+        ReservationService reservationService;
+        ProductService productService;
 
         [TestInitialize]
         public void SetUp()
         {
             var imMemRep = new InventoryMemoryRepository();
-            var consoleLogger = new ConsoleLogger(LogLevel.Info);
             var mockService = new MockDataService(imMemRep);
             mockService.Generate(TestData.Reservations, TestData.Products, TestData.Orders);
-            inventoryEndPoint = new InventoryEndPoint(imMemRep, consoleLogger);
+            reservationService = new ReservationService(imMemRep);
+            productService = new ProductService(imMemRep);
         }
 
         [TestMethod]
@@ -29,7 +27,7 @@ namespace ProductReservationTool.Tests
             var order1 = new OrderLine() { ProductId = "1", Quantity = 10 };
             var orders = new List<OrderLine>() { order1 };
 
-            var reservation = inventoryEndPoint.CreateReservation(orders);
+            var reservation = reservationService.Create(orders);
             Assert.IsNotNull(reservation);
         }
 
@@ -42,18 +40,18 @@ namespace ProductReservationTool.Tests
             var orders = new List<OrderLine>() { order1, order2, order3 };
 
             const int ITEMS_NB = 10;
-            var reservations = inventoryEndPoint.GetAllReservations();
+            var reservations = reservationService.GetAll();
             int count = reservations.Count();
 
             for (int i = 0; i < ITEMS_NB; i++)
             {
-                var reservation = inventoryEndPoint.CreateReservation(orders);
+                var reservation = reservationService.Create(orders);
                 if (reservation == null)
                     Assert.Fail("Reservation is null");
             }
 
-            reservations = inventoryEndPoint.GetAllReservations();
-            Assert.AreEqual(reservations.Count, count + ITEMS_NB);
+            reservations = reservationService.GetAll();
+            Assert.AreEqual(reservations.Count(), count + ITEMS_NB);
         }
 
         [TestMethod]
@@ -62,7 +60,7 @@ namespace ProductReservationTool.Tests
             var order1 = new OrderLine() { ProductId = "999", Quantity = 10 };
             var orders = new List<OrderLine>() { order1 };
 
-            Assert.ThrowsException<UnknownProductException>(() => inventoryEndPoint.CreateReservation(orders));
+            Assert.ThrowsException<UnknownProductException>(() => reservationService.Create(orders));
         }
 
         [TestMethod]
@@ -72,7 +70,7 @@ namespace ProductReservationTool.Tests
             var order2 = new OrderLine() { ProductId = "1", Quantity = 6 };
             var orders = new List<OrderLine>() { order1, order2 };
 
-            Assert.ThrowsException<DuplicateProductException>(() => inventoryEndPoint.CreateReservation(orders));
+            Assert.ThrowsException<DuplicateProductException>(() => reservationService.Create(orders));
         }
 
         [TestMethod]
@@ -81,7 +79,7 @@ namespace ProductReservationTool.Tests
             var order1 = new OrderLine() { ProductId = "3", Quantity = 10 };
             var orders = new List<OrderLine>() { order1 };
 
-            var reservation = inventoryEndPoint.CreateReservation(orders);
+            var reservation = reservationService.Create(orders);
             Assert.IsNotNull(reservation);
         }
 
@@ -90,8 +88,8 @@ namespace ProductReservationTool.Tests
         {
             const int LIMIT = 1;
 
-            var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
-            Assert.AreEqual(reservations.Count, LIMIT);
+            var reservations = reservationService.Get(0, LIMIT);
+            Assert.AreEqual(reservations.Count(), LIMIT);
         }
 
         [TestMethod]
@@ -99,14 +97,14 @@ namespace ProductReservationTool.Tests
         {
             const int LIMIT = 3;
 
-            var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
-            Assert.AreEqual(LIMIT, reservations.Count);
+            var reservations = reservationService.Get(0, LIMIT);
+            Assert.AreEqual(LIMIT, reservations.Count());
         }
 
         [TestMethod]
         public void TestGet_Unique()
         {
-            var reservations = inventoryEndPoint.GetAllReservations();
+            var reservations = reservationService.GetAll();
 
             var duplicates = reservations.GroupBy(r => r.ReservationId)
                   .Where(r => r.Count() > 1)
@@ -121,13 +119,13 @@ namespace ProductReservationTool.Tests
         {
             const string ID = "1";
 
-            var reservation = inventoryEndPoint.GetReservationByID(ID);
+            var reservation = reservationService.GetByID(ID);
             Assert.IsNotNull(reservation);
             Assert.IsTrue(reservation.IsAvailable);
 
-            inventoryEndPoint.SetProduct(ID, 0);
+            productService.SetProduct(ID, 0);
+            reservation = reservationService.GetByID(ID);
 
-            reservation = inventoryEndPoint.GetReservationByID(ID);
             Assert.IsNotNull(reservation);
             Assert.IsFalse(reservation.IsAvailable);
         }
@@ -139,13 +137,13 @@ namespace ProductReservationTool.Tests
             const string PRODUCT_ID = "3";
             const int QUANTITY = 12;
 
-            var reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
+            var reservation = reservationService.GetByID(RESA_ID);
             Assert.IsNotNull(reservation);
             Assert.IsFalse(reservation.IsAvailable);
 
-            inventoryEndPoint.SetProduct(PRODUCT_ID, QUANTITY);
+            productService.SetProduct(PRODUCT_ID, QUANTITY);
+            reservation = reservationService.GetByID(RESA_ID);
 
-            reservation = inventoryEndPoint.GetReservationByID(RESA_ID);
             Assert.IsNotNull(reservation);
             Assert.IsTrue(reservation.IsAvailable);
         }
@@ -155,7 +153,7 @@ namespace ProductReservationTool.Tests
         {
             const int LIMIT = 3;
 
-            var reservations = inventoryEndPoint.GetReservations(0, LIMIT);
+            var reservations = reservationService.Get(0, LIMIT).ToList();
             Assert.AreEqual(LIMIT, reservations.Count);
 
             bool isSorted = reservations[0].CreatedAt < reservations[1].CreatedAt && reservations[1].CreatedAt < reservations[2].CreatedAt;
